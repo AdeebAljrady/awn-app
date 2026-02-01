@@ -65,16 +65,28 @@ export async function sendChatMessage(
 
   return response.text;
 }
+
+const mindMapSchema = z.object({
+  nodes: z.array(
+    z.object({
+      id: z.string(),
+      title: z.string(),
+      parentId: z.string().nullable(),
+      children: z.array(z.string())
+    })
+  )
+});
+
 export async function generateMindMapFromPDF(
   fileURL: string,
   unitPreference: string = "",
   fileName: string = "خريطة ذهنية جديدة",
   fileId?: string
-): Promise<{ data: any; error: string | null }> {
+) {
   try {
     const mindMap = await generateObject({
       model: "google/gemini-3-flash",
-      schema: {}, // ضع مخطط MindMap المناسب
+      schema: mindMapSchema,
       messages: [
         {
           role: "user",
@@ -91,6 +103,7 @@ export async function generateMindMapFromPDF(
     return { data: null, error: "خطأ أثناء إنشاء الخريطة الذهنية" };
   }
 }
+
 
 
 export async function generateQuizFromPDF(
