@@ -65,6 +65,32 @@ export async function sendChatMessage(
 
   return response.text;
 }
+export async function generateMindMapFromPDF(
+  fileURL: string,
+  unitPreference: string = "",
+  fileName: string = "خريطة ذهنية جديدة",
+  fileId?: string
+): Promise<{ data: any; error: string | null }> {
+  try {
+    const mindMap = await generateObject({
+      model: "google/gemini-3-flash",
+      schema: {}, // ضع مخطط MindMap المناسب
+      messages: [
+        {
+          role: "user",
+          content: [
+            { type: "text", text: `Create a mind map from this PDF: ${fileURL}` }
+          ],
+        },
+      ],
+      temperature: 0.4,
+    });
+
+    return { data: mindMap, error: null };
+  } catch (error) {
+    return { data: null, error: "خطأ أثناء إنشاء الخريطة الذهنية" };
+  }
+}
 
 
 export async function generateQuizFromPDF(
