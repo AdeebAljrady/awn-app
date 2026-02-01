@@ -41,12 +41,28 @@ const quizSchema = z.object({
   ),
 });
 
-export async function sendChatMessage(message: string) {
+export async function sendChatMessage(
+  history: { role: string; text: string }[],
+  text: string,
+  fileBase64?: string
+) {
+  const messages: any[] = history.map((h) => ({
+    role: h.role,
+    content: [{ type: "text", text: h.text }],
+  }));
+
+  messages.push({ role: "user", content: [{ type: "text", text }] });
+
+  if (fileBase64) {
+    messages.push({ role: "user", content: [{ type: "file", data: fileBase64, mediaType: "application/pdf" }] });
+  }
+
   const response = await generateText({
-    model: GEMINI_MODEL,
-    messages: [{ role: "user", content: [{ type: "text", text: message }] }],
+    model: "google/gemini-3-flash",
     temperature: 0.4,
+    messages,
   });
+
   return response.text;
 }
 
