@@ -41,6 +41,16 @@ const quizSchema = z.object({
   ),
 });
 
+export async function sendChatMessage(message: string) {
+  const response = await generateText({
+    model: GEMINI_MODEL,
+    messages: [{ role: "user", content: [{ type: "text", text: message }] }],
+    temperature: 0.4,
+  });
+  return response.text;
+}
+
+
 export async function generateQuizFromPDF(
   fileURL: string,
   unitPreference: string,
