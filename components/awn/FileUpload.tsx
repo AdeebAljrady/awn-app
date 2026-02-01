@@ -90,7 +90,7 @@ export default function FileUpload({
           file.name || "unknown",
           storagePath,
           response.uploadURL || "",
-          file.size,
+          file.size ?? undefined,
           file.type // TUS might return an upload URL but we often just rely on path.
         );
 
