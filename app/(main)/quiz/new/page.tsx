@@ -2,7 +2,8 @@ import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
 import { getFileById } from "@/app/actions/db/files";
 import QuizNew from "@/components/awn/QuizNew";
-
+export const runtime = "nodejs";
+export const dynamic = "force-dynamic";
 interface Props {
   searchParams: Promise<{ fileId?: string }>;
 }
